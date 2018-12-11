@@ -103,9 +103,75 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"index.js":[function(require,module,exports) {
+})({"redditapi.js":[function(require,module,exports) {
+'use strict';
 
-},{}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    search: function search(searchTerm, searchLimit, sortBy) {
+        console.log('search...');
+        fetch('http://www.reddit.com/search.json?q=' + searchTerm).then(function (res) {
+            return res.json();
+        }).then(function (data) {
+            return console.log(data);
+        });
+    }
+};
+},{}],"index.js":[function(require,module,exports) {
+'use strict';
+
+var _redditapi = require('./redditapi');
+
+var _redditapi2 = _interopRequireDefault(_redditapi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var searchForm = document.getElementById('search-form');
+var searchInput = document.getElementById('search-input');
+
+searchForm.addEventListener('submit', function (e) {
+    var searchTerm = searchInput.nodeValue;
+    var sortBy = document.querySelector('input [name="sortby"]:checked');
+    console.log(sortBy);
+
+    var searchLimit = document.getElementById('limit').value;
+    console.log(searchLimit);
+
+    if (searchTerm === '') {
+        // Show message
+        showMessage('Please add a search term', 'alert-danger');
+    }
+    searchInput.value = '';
+
+    // Search Reddit
+    _redditapi2.default.search(searchTerm, searchLimit, sortBy).then();
+
+    e.preventDefault();
+});
+
+function showMessage(message, className) {
+    // Create div
+    var div = document.createElement('div');
+    // Add classes
+    div.className = 'alert alert-' + className;
+
+    // Add text
+    div.appendChild(document.createTextNode(message));
+    // Get parent
+    var searchContainer = document.getElementById('search-container');
+    var search = document.getElementById('search');
+
+    // Insert message
+    searchContainer.insertBefore(div, search);
+
+    // Timeout alert
+    setTimeout(function () {
+        return document.querySelector('.alert').remove();
+    }, 3000);
+}
+},{"./redditapi":"redditapi.js"}],"../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -134,7 +200,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '56098' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '55332' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -276,3 +342,4 @@ function hmrAccept(bundle, id) {
   });
 }
 },{}]},{},["../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
+//# sourceMappingURL=/reddit_search_app.f6fb21f1.map
